@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Goals</title>
+    <style>
+        :root {
+            --bg-color: #0d0f12;
+            --card-bg: #16191e;
+            --border-color: #262c36;
+            --text-main: #f0f2f5;
+            --text-muted: #8b95a5;
+
+            --accent-primary: #8b5cf6;
+            --accent-primary-hover: #7c3aed;
+            --error-color: #f43f5e;
+
+            /* Macro Colors */
+            --cal-color: #f59e0b;
+            --protein-color: #a78bfa;
+            --carbs-color: #2dd4bf;
+            --fats-color: #f43f5e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 32px 16px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: var(--text-main);
+        }
+
+        .goals-container {
+            max-width: 580px;
+            margin: 0 auto;
+        }
+
+        /* App Bar Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .page-title-group h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+        }
+
+        .nav-back {
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: var(--card-bg);
+            padding: 28px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .card-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Custom label styling for macro visual cues */
+        .label-cal::before { content: "🔥 "; }
+        .label-protein::before { content: "💪 "; }
+        .label-carbs::before { content: "🌾 "; }
+        .label-fats::before { content: "🥑 "; }
+
+        input[type="number"],
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 14px;
+            background: #101216;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+        }
+
+        .macro-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .error-text {
+            display: block;
+            color: var(--error-color);
+            font-size: 0.8rem;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        .btn-submit {
+            background-color: var(--accent-primary);
+            color: #ffffff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+            margin-top: 8px;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--accent-primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(139, 92, 246, 0.35);
+        }
+
+        @media (max-width: 480px) {
+            .macro-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="goals-container">
+
+        <!-- App Header -->
+        <header class="page-header">
+            <div class="page-title-group">
+                <h1>Nutrition Goals</h1>
+                <a href="{{ url_for('dashboard') }}" class="nav-back">← Back to Dashboard</a>
+            </div>
+        </header>
+
+        <!-- Goals Form Card -->
+        <div class="form-card">
+            <h2 class="card-title">Daily Targets</h2>
+            <p class="card-subtitle">Set your target daily calorie intake and macronutrient balance.</p>
+
+            <form method="POST" action="{{ url_for('goals') }}">
+                {{ form.hidden_tag() }}
+
+                <!-- Calorie Goal -->
+                <div class="form-group">
+                    {{ form.daily_calorie_goal.label(class="label-cal") }}
+                    {{ form.daily_calorie_goal(placeholder="e.g. 2000") }}
+                    {% for error in form.daily_calorie_goal.errors %}
+                        <span class="error-text">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+                <!-- Macros Grid -->
+                <div class="macro-grid">
+                    <div class="form-group">
+                        {{ form.daily_protein_goal.label(class="label-protein") }}
+                        {{ form.daily_protein_goal(placeholder="e.g. 150") }}
+                        {% for error in form.daily_protein_goal.errors %}
+                            <span class="error-text">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.daily_carbs_goal.label(class="label-carbs") }}
+                        {{ form.daily_carbs_goal(placeholder="e.g. 200") }}
+                        {% for error in form.daily_carbs_goal.errors %}
+                            <span class="error-text">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form.daily_fat_goal.label(class="label-fats") }}
+                    {{ form.daily_fat_goal(placeholder="e.g. 65") }}
+                    {% for error in form.daily_fat_goal.errors %}
+                        <span class="error-text">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    {{ form.submit(class="btn-submit", value="Save Goals") }}
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</body>
+</html>

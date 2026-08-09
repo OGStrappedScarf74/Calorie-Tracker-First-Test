@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #0d0f12;
+            --card-bg: #16191e;
+            --border-color: #262c36;
+            --text-main: #f0f2f5;
+            --text-muted: #8b95a5;
+
+            --accent-purple: #8b5cf6;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 32px 16px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .dashboard-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* App Bar Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .welcome-title h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+        }
+
+        .welcome-title p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 4px;
+        }
+
+        .btn-logout {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+
+        .btn-logout:hover {
+            color: #f43f5e;
+            border-color: rgba(244, 63, 94, 0.3);
+            background: rgba(244, 63, 94, 0.08);
+        }
+
+        /* Action Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 20px;
+        }
+
+        .action-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+        }
+
+        .card-icon {
+            font-size: 1.8rem;
+            margin-bottom: 16px;
+            display: inline-block;
+        }
+
+        .card-content h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .card-content p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+            margin-bottom: 20px;
+        }
+
+        .card-link {
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: gap 0.2s ease;
+        }
+
+        .action-card:hover .card-link {
+            gap: 10px;
+        }
+
+        /* Card Theme Accents */
+        .card-goals .card-link { color: var(--accent-amber); }
+        .card-track .card-link { color: var(--accent-emerald); }
+        .card-journal .card-link { color: var(--accent-purple); }
+
+        @media (max-width: 600px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+
+        <!-- Dashboard Header -->
+        <header class="page-header">
+            <div class="welcome-title">
+                <h1>Welcome, {{ current_user.username }}</h1>
+                <p>Manage your daily nutrition goals, track meals, and review your logs.</p>
+            </div>
+            <a href="{{ url_for('logout') }}" class="btn-logout">Log Out</a>
+        </header>
+
+        <!-- Main Action Cards -->
+        <main class="cards-grid">
+
+            <!-- Goals Card -->
+            <a href="{{ url_for('goals') }}" class="action-card card-goals">
+                <div class="card-content">
+                    <span class="card-icon">🎯</span>
+                    <h3>Set Goals</h3>
+                    <p>Customize your target daily intake for calories and primary macros.</p>
+                </div>
+                <span class="card-link">Configure Goals →</span>
+            </a>
+
+            <!-- Track Meal Card -->
+            <a href="{{ url_for('tracker') }}" class="action-card card-track">
+                <div class="card-content">
+                    <span class="card-icon">🥗</span>
+                    <h3>Log Meal</h3>
+                    <p>Search global databases to quickly calculate and log your meals.</p>
+                </div>
+                <span class="card-link">Track Now →</span>
+            </a>
+
+            <!-- View Journal Card -->
+            <a href="{{ url_for('journal') }}" class="action-card card-journal">
+                <div class="card-content">
+                    <span class="card-icon">📖</span>
+                    <h3>Food Journal</h3>
+                    <p>Review daily summaries, historical entries, and macro breakdowns.</p>
+                </div>
+                <span class="card-link">View Journal →</span>
+            </a>
+
+        </main>
+    </div>
+
+</body>
+</html>
