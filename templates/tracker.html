@@ -18,7 +18,6 @@
             --accent-submit: #10b981;
             --accent-submit-hover: #059669;
 
-            /* Macro Colors */
             --cal-color: #f59e0b;
             --protein-color: #a78bfa;
             --carbs-color: #2dd4bf;
@@ -56,7 +55,6 @@
             margin: 0 auto;
         }
 
-        /* App Bar Header */
         .page-header {
             display: flex;
             justify-content: space-between;
@@ -79,7 +77,6 @@
             font-size: 0.875rem;
         }
 
-        /* Form Controls Base */
         input[type="text"],
         input[type="number"],
         select,
@@ -287,7 +284,6 @@
 <body>
 
     <div class="tracker-container">
-        <!-- App Header -->
         <header class="page-header">
             <div class="page-title-group">
                 <h1>Track Your Meal</h1>
@@ -298,7 +294,6 @@
             </div>
         </header>
 
-        <!-- SEARCH CONTAINER -->
         <div class="search-wrapper">
             <label class="search-label" for="live-search">🔍 Search Food Database:</label>
             <div class="search-row">
@@ -310,11 +305,9 @@
                 </select>
                 <button type="button" class="btn-search" onclick="executeSearch()">Search</button>
             </div>
-            <!-- FLOATING DROPDOWN LIST -->
             <ul id="dropdown" class="dropdown-results"></ul>
         </div>
 
-        <!-- LOG ENTRY FORM -->
         <div class="form-card">
             <h3 class="card-title">Meal Details</h3>
             <form method="POST" action="{{ url_for('tracker') }}">
@@ -376,7 +369,6 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT FOR SEARCH & AUTO-CALCULATION -->
     <script>
         let searchTimeout = null;
         let activeFood100g = null;
