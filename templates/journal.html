@@ -4,315 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Food Journal</title>
-    <style>
-        :root {
-            --bg-color: #0d0f12;
-            --card-bg: #16191e;
-            --card-header: #1c2027;
-            --border-color: #262c36;
-            --text-main: #f0f2f5;
-            --text-muted: #8b95a5;
-
-            --accent-primary: #8b5cf6;
-            --accent-primary-hover: #7c3aed;
-
-            /* Macro Colors */
-            --cal-color: #f59e0b;
-            --protein-color: #a78bfa;
-            --carbs-color: #2dd4bf;
-            --fats-color: #f43f5e;
-            --fiber-color: #34d399;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            padding: 32px 16px;
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        a {
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-
-        a:hover {
-            color: var(--text-main);
-        }
-
-        .journal-container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 32px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .page-title-group h1 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            color: var(--text-main);
-        }
-
-        .nav-back {
-            font-size: 0.875rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: 4px;
-        }
-
-        .btn-track {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background-color: var(--accent-primary);
-            color: #ffffff;
-            padding: 10px 18px;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
-        }
-
-        .btn-track:hover {
-            background-color: var(--accent-primary-hover);
-            color: #ffffff;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(139, 92, 246, 0.35);
-        }
-
-        /* Day Card */
-        .day-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            margin-bottom: 28px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .day-header {
-            background: var(--card-header);
-            padding: 16px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .day-title {
-            font-weight: 700;
-            font-size: 1.05rem;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .day-summary {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .macro-pill {
-            font-size: 0.8rem;
-            font-weight: 600;
-            padding: 4px 10px;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .macro-pill.calories { color: var(--cal-color); background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2); }
-        .macro-pill.protein { color: var(--protein-color); }
-        .macro-pill.carbs { color: var(--carbs-color); }
-        .macro-pill.fats { color: var(--fats-color); }
-        .macro-pill.fiber { color: var(--fiber-color); }
-
-        .table-wrapper {
-            overflow-x: auto;
-        }
-
-        .meal-table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-
-        .meal-table th, .meal-table td {
-            padding: 16px 24px;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.9rem;
-        }
-
-        .meal-table th {
-            background: var(--card-bg);
-            color: var(--text-muted);
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.72rem;
-            letter-spacing: 0.8px;
-        }
-
-        .meal-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .meal-table tr:hover td {
-            background-color: rgba(255, 255, 255, 0.015);
-        }
-
-        .food-name {
-            font-weight: 600;
-            color: var(--text-main);
-            font-size: 0.95rem;
-        }
-
-        .badge-state {
-            background: rgba(255, 255, 255, 0.08);
-            color: var(--text-muted);
-            font-size: 0.7rem;
-            font-weight: 600;
-            padding: 2px 8px;
-            border-radius: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            margin-left: 8px;
-            vertical-align: middle;
-        }
-
-        .food-note {
-            display: block;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            margin-top: 2px;
-        }
-
-        .macros-cell {
-            display: flex;
-            gap: 12px;
-            font-size: 0.825rem;
-            font-weight: 500;
-        }
-
-        .macros-cell span {
-            display: inline-flex;
-            align-items: center;
-        }
-
-        .m-p { color: var(--protein-color); }
-        .m-c { color: var(--carbs-color); }
-        .m-f { color: var(--fats-color); }
-        .m-fib { color: var(--fiber-color); }
-
-        .btn-delete {
-            background: rgba(244, 63, 94, 0.08);
-            border: 1px solid rgba(244, 63, 94, 0.15);
-            color: var(--fats-color);
-            border-radius: 8px;
-            cursor: pointer;
-            padding: 6px 10px;
-            font-size: 0.85rem;
-            transition: all 0.2s ease;
-        }
-
-        .btn-delete:hover {
-            background: var(--fats-color);
-            color: #ffffff;
-            border-color: var(--fats-color);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 64px 24px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            color: var(--text-muted);
-        }
-
-        .empty-state h3 {
-            color: var(--text-main);
-            font-size: 1.25rem;
-            margin-bottom: 8px;
-        }
-
-        .empty-state p {
-            margin-bottom: 24px;
-            font-size: 0.95rem;
-        }
-
-        @media (max-width: 640px) {
-            .page-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 16px;
-            }
-
-            .day-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .macros-cell {
-                flex-direction: column;
-                gap: 2px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
     <div class="journal-container">
 
-        <header class="page-header">
+        <header class="page-header flex-header">
             <div class="page-title-group">
                 <h1>Food Journal</h1>
-                <a href="{{ url_for('dashboard') }}" class="nav-back">← Back to Dashboard</a>
+                <a href="{{ url_for('dashboard') }}" class="nav-back">
+                    ← Back to Dashboard
+                </a>
             </div>
-            <a href="{{ url_for('tracker') }}" class="btn-track">
-                <span>+</span> Log New Meal
+            <a href="{{ url_for('tracker') }}" class="btn btn-primary">
+                + Log Meal
             </a>
         </header>
 
         {% if journal %}
             {% for day, data in journal.items() %}
-                <div class="day-card">
-                    <!-- Daily Header with Total Macros Summary -->
-                    <div class="day-header">
-                        <span class="day-title">📅 {{ day }}</span>
+                <div class="journal-day card">
 
-                        <div class="day-summary">
-                            <span class="macro-pill calories">🔥 {{ data.total_calories }} kcal</span>
-                            <span class="macro-pill protein">P: {{ data.total_protein }}g</span>
-                            <span class="macro-pill carbs">C: {{ data.total_carbs }}g</span>
-                            <span class="macro-pill fats">F: {{ data.total_fats }}g</span>
-                            <span class="macro-pill fiber">Fib: {{ data.total_fiber }}g</span>
+                    <div class="journal-day-header">
+                        <div class="day-title">
+                            <h3>{{ day }}</h3>
+                        </div>
+                        <div class="nutrient-summary-row">
+                            <span class="nutrient-pill total-cal">{{ data.total_calories }} kcal</span>
+                            <span class="nutrient-pill m-p">P: {{ data.total_protein }}g</span>
+                            <span class="nutrient-pill m-c">C: {{ data.total_carbs }}g</span>
+                            <span class="nutrient-pill m-f">F: {{ data.total_fats }}g</span>
+                            <span class="nutrient-pill m-fib">Fi: {{ data.total_fiber }}g</span>
                         </div>
                     </div>
 
@@ -320,10 +43,10 @@
                         <table class="meal-table">
                             <thead>
                                 <tr>
-                                    <th>Food Item</th>
+                                    <th>Food</th>
                                     <th>Quantity</th>
-                                    <th>Energy</th>
-                                    <th>Macros (P / C / F / Fib)</th>
+                                    <th>Calories</th>
+                                    <th>Macros</th>
                                     <th style="text-align: right;">Action</th>
                                 </tr>
                             </thead>
@@ -331,27 +54,28 @@
                                 {% for entry in data.entries %}
                                     <tr>
                                         <td>
-                                            <span class="food-name">{{ entry.food_name }}</span>
-                                            {% if entry.state and entry.state != 'as_is' %}
-                                                <span class="badge-state">{{ entry.state }}</span>
-                                            {% endif %}
-                                            {% if entry.notes %}
-                                                <span class="food-note">Note: {{ entry.notes }}</span>
-                                            {% endif %}
+                                            <div class="food-info-cell">
+                                                <span class="food-name">{{ entry.food_name }}</span>
+                                                {% if entry.state and entry.state != 'as_is' %}
+                                                    <span class="badge-state">{{ entry.state }}</span>
+                                                {% endif %}
+                                                {% if entry.notes %}
+                                                    <small class="food-note">{{ entry.notes }}</small>
+                                                {% endif %}
+                                            </div>
                                         </td>
                                         <td>{{ entry.grams }}g</td>
-                                        <td><strong>{{ entry.calories }}</strong> <span style="color: var(--text-muted); font-size: 0.8em;">kcal</span></td>
+                                        <td class="cal-highlight"><strong>{{ entry.calories }}</strong> kcal</td>
                                         <td>
                                             <div class="macros-cell">
-                                                <span class="m-p">P: {{ entry.protein }}g</span>
-                                                <span class="m-c">C: {{ entry.carbs }}g</span>
-                                                <span class="m-f">F: {{ entry.fats }}g</span>
-                                                <span class="m-fib">Fib: {{ entry.fiber or 0 }}g</span>
+                                                <span class="mini-macro p-color">P: {{ entry.protein }}g</span>
+                                                <span class="mini-macro c-color">C: {{ entry.carbs }}g</span>
+                                                <span class="mini-macro f-color">F: {{ entry.fats }}g</span>
                                             </div>
                                         </td>
                                         <td style="text-align: right;">
-                                            <form method="POST" action="{{ url_for('delete_log', log_id=entry.id) }}" style="display:inline;" onsubmit="return confirm('Delete this log entry?');">
-                                                <button type="submit" class="btn-delete" title="Delete entry">Delete</button>
+                                            <form method="POST" action="{{ url_for('delete_log', log_id=entry.id) }}" onsubmit="return confirm('Delete this meal?');">
+                                                <button type="submit" class="btn-delete-link">Delete</button>
                                             </form>
                                         </td>
                                     </tr>
@@ -359,15 +83,17 @@
                             </tbody>
                         </table>
                     </div>
+
                 </div>
             {% endfor %}
         {% else %}
-            <div class="empty-state">
-                <h3>No logged meals yet</h3>
-                <p>Start tracking your daily meals to build your nutrition journal.</p>
-                <a href="{{ url_for('tracker') }}" class="btn-track">Log Your First Meal</a>
+            <div class="card empty-state">
+                <h3>No meals logged yet</h3>
+                <p>Add your first meal to start building your journal.</p>
+                <a href="{{ url_for('tracker') }}" class="btn btn-primary" style="display:inline-block; width:auto; margin-top:1.5rem;">+ Log Your First Meal</a>
             </div>
         {% endif %}
+
     </div>
 
 </body>

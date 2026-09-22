@@ -4,469 +4,144 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Track Meal</title>
-    <style>
-        :root {
-            --bg-color: #0d0f12;
-            --card-bg: #16191e;
-            --card-header: #1c2027;
-            --border-color: #262c36;
-            --text-main: #f0f2f5;
-            --text-muted: #8b95a5;
-
-            --accent-primary: #8b5cf6;
-            --accent-primary-hover: #7c3aed;
-            --accent-submit: #10b981;
-            --accent-submit-hover: #059669;
-
-            --cal-color: #f59e0b;
-            --protein-color: #a78bfa;
-            --carbs-color: #2dd4bf;
-            --fats-color: #f43f5e;
-            --fiber-color: #34d399;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            padding: 32px 16px;
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        a {
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-
-        a:hover {
-            color: var(--text-main);
-        }
-
-        .tracker-container {
-            max-width: 680px;
-            margin: 0 auto;
-        }
-
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 28px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .page-title-group h1 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            color: var(--text-main);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 16px;
-            font-size: 0.875rem;
-        }
-
-        input[type="text"],
-        input[type="number"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 12px 14px;
-            background: #101216;
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            border-radius: 10px;
-            font-size: 0.95rem;
-            font-family: inherit;
-            transition: all 0.2s ease;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        /* Search Section */
-        .search-wrapper {
-            position: relative;
-            margin-bottom: 28px;
-        }
-
-        .search-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--text-main);
-        }
-
-        .search-row {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-search {
-            background-color: var(--accent-primary);
-            color: #ffffff;
-            border: none;
-            padding: 0 20px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: background 0.2s ease;
-        }
-
-        .btn-search:hover {
-            background-color: var(--accent-primary-hover);
-        }
-
-        /* Floating Dropdown Results */
-        .dropdown-results {
-            position: absolute;
-            top: calc(100% + 6px);
-            left: 0;
-            right: 0;
-            background: #181c23;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            max-height: 320px;
-            overflow-y: auto;
-            z-index: 1000;
-            box-shadow: 0 12px 32px rgba(0,0,0,0.4);
-            display: none;
-            margin: 0;
-            padding: 6px;
-            list-style: none;
-        }
-
-        .dropdown-results li {
-            padding: 12px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.15s ease;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .dropdown-results li:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .item-title {
-            font-weight: 600;
-            color: var(--text-main);
-            font-size: 0.95rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .source-tag {
-            font-size: 0.7rem;
-            padding: 2px 6px;
-            border-radius: 4px;
-            background: rgba(255, 255, 255, 0.08);
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
-        .macro-badge-row {
-            font-size: 0.8rem;
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .mb-cal { color: var(--cal-color); font-weight: 600; }
-        .mb-p { color: var(--protein-color); }
-        .mb-c { color: var(--carbs-color); }
-        .mb-f { color: var(--fats-color); }
-
-        /* Form Card */
-        .form-card {
-            background: var(--card-bg);
-            padding: 28px;
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .card-title {
-            font-size: 1.15rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: var(--text-main);
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .section-subtitle {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin: 24px 0 12px 0;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            font-weight: 600;
-            border-top: 1px solid var(--border-color);
-            padding-top: 16px;
-        }
-
-        .macro-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-        }
-
-        .btn-submit {
-            background-color: var(--accent-submit);
-            color: #ffffff;
-            padding: 14px 20px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
-            margin-top: 8px;
-        }
-
-        .btn-submit:hover {
-            background-color: var(--accent-submit-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
-        }
-
-        @media (max-width: 500px) {
-            .macro-grid {
-                grid-template-columns: 1fr;
-            }
-            .search-row {
-                flex-direction: column;
-            }
-            .btn-search {
-                padding: 12px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
 
     <div class="tracker-container">
+
         <header class="page-header">
             <div class="page-title-group">
-                <h1>Track Your Meal</h1>
+                <h1>Track a Meal</h1>
             </div>
+
             <div class="nav-links">
-                <a href="{{ url_for('dashboard') }}">← Dashboard</a>
-                <a href="{{ url_for('journal') }}">View Journal →</a>
+                <a href="{{ url_for('dashboard') }}">
+                    ← Dashboard
+                </a>
+                <a href="{{ url_for('journal') }}">
+                    Journal →
+                </a>
             </div>
         </header>
 
         <div class="search-wrapper">
-            <label class="search-label" for="live-search">🔍 Search Food Database:</label>
+            <label class="search-label" for="live-search">
+                Search Food Database
+            </label>
+
             <div class="search-row">
-                <input type="text" id="live-search" placeholder="Search foods (e.g. KFC, Egg, Rice)..." autocomplete="off">
-                <select id="search-state" style="width: 140px;">
+                <input type="text" id="live-search" placeholder="Search foods..." autocomplete="off">
+
+                <select id="search-state">
                     <option value="">Any State</option>
                     <option value="raw">Raw</option>
                     <option value="cooked">Cooked</option>
                 </select>
-                <button type="button" class="btn-search" onclick="executeSearch()">Search</button>
+
+                <button type="button" class="btn-search">
+                    Search
+                </button>
             </div>
+
             <ul id="dropdown" class="dropdown-results"></ul>
         </div>
 
         <div class="form-card">
-            <h3 class="card-title">Meal Details</h3>
+            <h2 class="card-title">
+                Meal Details
+            </h2>
+
             <form method="POST" action="{{ url_for('tracker') }}">
                 {{ form.hidden_tag() }}
 
                 <div class="form-group">
                     {{ form.food_name.label }}
-                    {{ form.food_name(id="food_name", placeholder="Selected or entered food name...") }}
+                    {{ form.food_name(id="food_name", placeholder="Food name") }}
+                    {% for error in form.food_name.errors %}
+                        <span class="error-text">{{ error }}</span>
+                    {% endfor %}
                 </div>
 
                 <div class="form-group">
                     {{ form.state.label }}
                     {{ form.state(id="state") }}
+                    {% for error in form.state.errors %}
+                        <span class="error-text">{{ error }}</span>
+                    {% endfor %}
                 </div>
 
                 <div class="form-group">
                     {{ form.grams.label }}
-                    {{ form.grams(id="grams", placeholder="e.g. 150", oninput="recalculateMacros()") }}
+                    {{ form.grams(id="grams", placeholder="e.g. 150") }}
+                    {% for error in form.grams.errors %}
+                        <span class="error-text">{{ error }}</span>
+                    {% endfor %}
                 </div>
 
-                <div class="section-subtitle">Nutritional Values (Auto-calculated)</div>
+                <div class="section-subtitle">
+                    Nutrition
+                </div>
 
                 <div class="macro-grid">
                     <div class="form-group">
                         {{ form.calories.label }}
                         {{ form.calories(id="calories") }}
+                        {% for error in form.calories.errors %}
+                            <span class="error-text">{{ error }}</span>
+                        {% endfor %}
                     </div>
 
                     <div class="form-group">
                         {{ form.protein.label }}
                         {{ form.protein(id="protein") }}
+                        {% for error in form.protein.errors %}
+                            <span class="error-text">{{ error }}</span>
+                        {% endfor %}
                     </div>
 
                     <div class="form-group">
                         {{ form.carbs.label }}
                         {{ form.carbs(id="carbs") }}
+                        {% for error in form.carbs.errors %}
+                            <span class="error-text">{{ error }}</span>
+                        {% endfor %}
                     </div>
 
                     <div class="form-group">
                         {{ form.fats.label }}
                         {{ form.fats(id="fats") }}
+                        {% for error in form.fats.errors %}
+                            <span class="error-text">{{ error }}</span>
+                        {% endfor %}
                     </div>
                 </div>
 
                 <div class="form-group">
                     {{ form.fiber.label }}
                     {{ form.fiber(id="fiber") }}
+                    {% for error in form.fiber.errors %}
+                        <span class="error-text">{{ error }}</span>
+                    {% endfor %}
                 </div>
 
                 <div class="form-group">
                     {{ form.notes.label }}
-                    {{ form.notes(placeholder="Optional notes (e.g., lunch at KFC)...") }}
+                    {{ form.notes(placeholder="Optional notes") }}
+                    {% for error in form.notes.errors %}
+                        <span class="error-text">{{ error }}</span>
+                    {% endfor %}
                 </div>
 
                 <div class="form-group">
-                    {{ form.submit(class="btn-submit") }}
+                    {{ form.submit(class="btn-primary") }}
                 </div>
             </form>
         </div>
+
     </div>
 
-    <script>
-        let searchTimeout = null;
-        let activeFood100g = null;
-
-        const searchInput = document.getElementById('live-search');
-        const stateSelect = document.getElementById('search-state');
-        const dropdown = document.getElementById('dropdown');
-
-        function executeSearch() {
-            clearTimeout(searchTimeout);
-            const query = searchInput.value.trim();
-
-            if (query.length < 2) {
-                dropdown.style.display = 'none';
-                return;
-            }
-
-            dropdown.innerHTML = '<li style="color: var(--text-muted);">Searching database...</li>';
-            dropdown.style.display = 'block';
-
-            fetch(`/api/search-food?q=${encodeURIComponent(query)}&state=${stateSelect.value}`)
-                .then(res => res.json())
-                .then(data => {
-                    dropdown.innerHTML = '';
-                    if (data.length === 0) {
-                        dropdown.innerHTML = '<li style="color: var(--text-muted);">No food results found.</li>';
-                        return;
-                    }
-
-                    data.forEach(item => {
-                        const li = document.createElement('li');
-                        const sourceTag = item.source ? `<span class="source-tag">${item.source}</span>` : '';
-
-                        li.innerHTML = `
-                            <div class="item-title">
-                                <span>${item.name}</span>
-                                ${sourceTag}
-                            </div>
-                            <div class="macro-badge-row">
-                                <span class="mb-cal">${item.calories_100g} kcal/100g</span>
-                                <span class="mb-p">P: ${item.protein_100g}g</span>
-                                <span class="mb-c">C: ${item.carbs_100g}g</span>
-                                <span class="mb-f">F: ${item.fats_100g}g</span>
-                            </div>
-                        `;
-                        li.onclick = () => pickFood(item);
-                        dropdown.appendChild(li);
-                    });
-                });
-        }
-
-        searchInput.addEventListener('input', () => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(executeSearch, 300);
-        });
-
-        searchInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                executeSearch();
-            }
-        });
-
-        function pickFood(item) {
-            activeFood100g = item;
-
-            document.getElementById('food_name').value = item.name;
-            if (stateSelect.value) {
-                document.getElementById('state').value = stateSelect.value;
-            }
-
-            if (!document.getElementById('grams').value) {
-                document.getElementById('grams').value = 100;
-            }
-
-            recalculateMacros();
-            dropdown.style.display = 'none';
-            searchInput.value = '';
-        }
-
-        function recalculateMacros() {
-            if (!activeFood100g) return;
-
-            const grams = parseFloat(document.getElementById('grams').value) || 0;
-            const factor = grams / 100;
-
-            document.getElementById('calories').value = (activeFood100g.calories_100g * factor).toFixed(1);
-            document.getElementById('protein').value = (activeFood100g.protein_100g * factor).toFixed(1);
-            document.getElementById('carbs').value = (activeFood100g.carbs_100g * factor).toFixed(1);
-            document.getElementById('fats').value = (activeFood100g.fats_100g * factor).toFixed(1);
-            document.getElementById('fiber').value = (activeFood100g.fiber_100g * factor).toFixed(1);
-        }
-
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.search-wrapper')) {
-                dropdown.style.display = 'none';
-            }
-        });
-    </script>
+    <script src="{{ url_for('static', filename='js/tracker.js') }}"></script>
 </body>
 </html>

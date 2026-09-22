@@ -4,195 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account</title>
-    <style>
-        :root {
-            --bg-color: #0d0f12;
-            --card-bg: #16191e;
-            --border-color: #262c36;
-            --text-main: #f0f2f5;
-            --text-muted: #8b95a5;
-
-            --accent-primary: #8b5cf6;
-            --accent-primary-hover: #7c3aed;
-            --error-color: #f43f5e;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px 16px;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        a {
-            color: var(--accent-primary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s ease;
-        }
-
-        a:hover {
-            color: var(--accent-primary-hover);
-        }
-
-        .auth-container {
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .auth-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 32px 28px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
-        }
-
-        .auth-header {
-            text-align: center;
-            margin-bottom: 28px;
-        }
-
-        .auth-header h1 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            color: var(--text-main);
-        }
-
-        .auth-header p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-top: 6px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 12px 14px;
-            background: #101216;
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            border-radius: 10px;
-            font-size: 0.95rem;
-            font-family: inherit;
-            transition: all 0.2s ease;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
-        }
-
-        .error-text {
-            display: block;
-            color: var(--error-color);
-            font-size: 0.8rem;
-            margin-top: 6px;
-            font-weight: 500;
-        }
-
-        .btn-submit {
-            background-color: var(--accent-primary);
-            color: #ffffff;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
-            margin-top: 8px;
-        }
-
-        .btn-submit:hover {
-            background-color: var(--accent-primary-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(139, 92, 246, 0.35);
-        }
-
-        .auth-footer {
-            text-align: center;
-            margin-top: 24px;
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
 
     <div class="auth-container">
+
         <div class="auth-card">
 
             <div class="auth-header">
                 <h1>Create Account</h1>
-                <p>Start tracking your nutrition and daily fitness goals</p>
+                <p>Set up your account to start tracking.</p>
             </div>
 
+
             <form method="POST" action="{{ url_for('register') }}">
+
                 {{ form.hidden_tag() }}
 
+
                 <div class="form-group">
+
                     {{ form.username.label }}
-                    {{ form.username(placeholder="Choose a username", autocomplete="username") }}
+
+                    {{ form.username(
+                        placeholder="Choose a username",
+                        autocomplete="username"
+                    ) }}
+
                     {% for error in form.username.errors %}
-                        <span class="error-text">{{ error }}</span>
+                        <span class="error-text">
+                            {{ error }}
+                        </span>
                     {% endfor %}
+
                 </div>
 
+
                 <div class="form-group">
+
                     {{ form.email.label }}
-                    {{ form.email(placeholder="you@example.com", autocomplete="email") }}
+
+                    {{ form.email(
+                        placeholder="you@example.com",
+                        autocomplete="email"
+                    ) }}
+
                     {% for error in form.email.errors %}
-                        <span class="error-text">{{ error }}</span>
+                        <span class="error-text">
+                            {{ error }}
+                        </span>
                     {% endfor %}
+
                 </div>
+
 
                 <div class="form-group">
+
                     {{ form.password.label }}
-                    {{ form.password(placeholder="Create a strong password", autocomplete="new-password") }}
+
+                    {{ form.password(
+                        placeholder="Create a password",
+                        autocomplete="new-password"
+                    ) }}
+
                     {% for error in form.password.errors %}
-                        <span class="error-text">{{ error }}</span>
+                        <span class="error-text">
+                            {{ error }}
+                        </span>
                     {% endfor %}
+
                 </div>
 
-                <div class="form-group" style="margin-bottom: 0;">
-                    {{ form.submit(class="btn-submit", value="Create Account") }}
+
+                <div class="form-group">
+
+                    {{ form.submit(
+                        class="btn-primary",
+                        value="Create Account"
+                    ) }}
+
                 </div>
+
             </form>
 
+
             <div class="auth-footer">
-                Already have an account? <a href="{{ url_for('login') }}">Log in here</a>
+                Already have an account?
+                <a href="{{ url_for('login') }}">
+                    Sign in
+                </a>
             </div>
 
         </div>
+
     </div>
 
 </body>
